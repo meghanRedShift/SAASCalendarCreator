@@ -6,8 +6,15 @@ app = Flask(__name__)
 from ics import Calendar, Event
 import datetime
 
+#Create calendar
+c = Calendar()
+'''
+class cal:
+  def __init__(self, calendar):
+    self.calendar = calendar
 
-
+c = cal(Calendar())
+'''
 #The time (mins and hours) and duration of each period listed on the block schedule
 hrs = [15,16,17,17,17,18,18,19,20,20,21,22,22]
 mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
@@ -15,8 +22,7 @@ dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
 
 #creates a 4 day week in calendar using the provided list of course names and week start date
 def create4DayWeek(courseNames, y, m, d):
-    #Create calendar
-    c = Calendar()
+    
     #List of names for each event depending on whether the day is even or odd schedule
     evenNames = ["Advisory/Community Flex Time", courseNames[0], courseNames[0] + " Flex", "Break",
                  courseNames[2], courseNames[2] + " Flex", "Lunch", courseNames[4], courseNames[4] +
@@ -54,8 +60,6 @@ def create4DayWeek(courseNames, y, m, d):
 
 #creates a 4 day week in calendar using the provided list of course names and week start date
 def create5DayWeek(courseNames, y, m, d):
-    #Create calendar
-    c = Calendar()
     #List of modified durations for long days on 5 day schedule
     dur5 = [15,60,15,15,60,15,45,60,15,15,105]
     #List of names for each event depending on the day of the week
@@ -132,9 +136,29 @@ def guidedFallMidterm1Weeks(courses):
 def home():
     return '''
         <html>
+            <head>
+                <style>
+                    .col{width:33.33%; float:left; margin-top: 50px; text-align: center;}
+                    #title{border: 5px solid red;}
+                    #instructions {text-align: left;}
+                </style>
+            </head>
             <body>
-                <p>Enter the names of your classes here. If you do not have a class for a certain block just leave the box blank.</p>
+                <div class="col"><p></p></div>
+                <div class="col">
+                <h1 id="title">SAAS Calendar Creator</h1>
+                <div id="instructions">
+                    <h3>Instructions</h3>
+                    <p>Enter the names of your classes here. If you do not have a class for a certain block just leave the box blank. Once you press submit:</p>
+                    <ul>
+                        <li>A calendar file will download.</li>
+                        <li>Create a <a href="https://support.google.com/calendar/answer/37095?hl=en">new calendar</a> in Google Drive</li>
+                        <li><a href="https://support.google.com/calendar/answer/37118?co=GENIE.Platform%3DDesktop&hl=en">Import</a> the calendar that you just created</li>
+                    </ul>
+                    <p><u>Currently, this generates a file for the first half trimester of the year only</u></p>
+                </div>
                 <form action="/getCal">
+                    <p><b>Class Names:</b></p>
                     <p>Block 1: <input name="block1"/></p>
                     <p>Block 2: <input name="block2"/></p>
                     <p>Block 3: <input name="block3"/></p>
@@ -143,8 +167,19 @@ def home():
                     <p>Block 6: <input name="block6"/></p>
                     <p>Block 7: <input name="block7"/></p>
                     <p>Block 8: <input name="block8"/></p>
+                    <p><b>Check to include:</b></p>
+                    <p><input type="checkbox" id="option1" name="option1" value="MorningAdvisory">
+                    <label for="option1">Morning Advisory</label></p>
+                    <p><input type="checkbox" id="option2" name="option2" value="breaks">
+                    <label for="option2">Breaks</label></p>
+                    <p><input type="checkbox" id="option3" name="option3" value="Lunch">
+                    <label for="option3">Lunch</label></p>
+                    <p><input type="checkbox" id="option4" name="option4" value="Conferencing">
+                    <label for="option4">Conferencing/Faculty Collaboration</label></p>
                     <p><input type = "submit" value="Submit"/></p>
                 </form>
+                </div>
+                <div class="col"><p></p></div>
             </body>
         </html>
 '''
