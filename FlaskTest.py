@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response
+import sys
 
 app = Flask(__name__)
 
@@ -21,15 +22,31 @@ mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
 dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
 
 #creates a 4 day week in calendar using the provided list of course names and week start date
-def create4DayWeek(courseNames, y, m, d):
+def create4DayWeek(courseNames, options, y, m, d,):
+    if options[0]:
+        mAdvisory = 'Advisory/Community Flex Time'
+    else:
+        mAdvisory = ""
+    if options[1]:
+        breaks='Break'
+    else:
+        breaks=""
+    if options[2]:
+        lunch="Lunch"
+    else:
+        lunch=""
+    if options[3]:
+        conferencing = 'Conferencing'
+    else:
+        conferencing = ""
     
     #List of names for each event depending on whether the day is even or odd schedule
-    evenNames = ["Advisory/Community Flex Time", courseNames[0], courseNames[0] + " Flex", "Break",
-                 courseNames[2], courseNames[2] + " Flex", "Lunch", courseNames[4], courseNames[4] +
-                 " Flex", "Break", courseNames[6], courseNames[6] + " Flex", "Conferencing"]
-    oddNames = ["Advisory/Community Flex Time", courseNames[1], courseNames[1] + " Flex", "Break",
-                 courseNames[3], courseNames[3] + " Flex", "Lunch", courseNames[5], courseNames[5] +
-                 " Flex", "Break", courseNames[7], courseNames[7] + " Flex", "Conferencing"]
+    evenNames = [mAdvisory, courseNames[0], courseNames[0] + " Flex", breaks,
+                 courseNames[2], courseNames[2] + " Flex", lunch, courseNames[4], courseNames[4] +
+                 " Flex", breaks, courseNames[6], courseNames[6] + " Flex", conferencing]
+    oddNames = [mAdvisory, courseNames[1], courseNames[1] + " Flex", breaks,
+                 courseNames[3], courseNames[3] + " Flex", lunch, courseNames[5], courseNames[5] +
+                 " Flex", breaks, courseNames[7], courseNames[7] + " Flex", conferencing]
     #The outer loop makes this run for each day of the week
     for z in range(1,5):
         #Chooses which set of names to use based on whether it is an even or odd day of the schedule
@@ -53,31 +70,47 @@ def create4DayWeek(courseNames, y, m, d):
                 c.events
         
     #Prints calendar file to console
-    print(str(c))
+    #print(str(c))
     #Saves calendar file to console
     #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
     open('my.ics', 'w').writelines(c)
 
 #creates a 4 day week in calendar using the provided list of course names and week start date
-def create5DayWeek(courseNames, y, m, d):
+def create5DayWeek(courseNames, options, y, m, d):
+    if options[0]:
+        mAdvisory = 'Advisory/Community Flex Time'
+    else:
+        mAdvisory = ""
+    if options[1]:
+        breaks='Break'
+    else:
+        breaks=""
+    if options[2]:
+        lunch="Lunch"
+    else:
+        lunch=""
+    if options[3]:
+        conferencing = 'Conferencing'
+    else:
+        conferencing = ""
     #List of modified durations for long days on 5 day schedule
     dur5 = [15,60,15,15,60,15,45,60,15,15,105]
     #List of names for each event depending on the day of the week
-    mNames = ["Advisory/Community Flex Time", courseNames[0], courseNames[0] + " Flex", "Break",
+    mNames = [mAdvisory, courseNames[0], courseNames[0] + " Flex", breaks,
                  courseNames[2], courseNames[2] + " Flex", "Lunch", courseNames[4], courseNames[4] +
-                 " Flex", "Break", courseNames[6], courseNames[6] + " Flex", "Conferencing"]
-    tNames = ["Advisory/Community Flex Time", courseNames[1], courseNames[1] + " Flex", "Break",
+                 " Flex", breaks, courseNames[6], courseNames[6] + " Flex", "Conferencing"]
+    tNames = [mAdvisory, courseNames[1], courseNames[1] + " Flex", breaks,
                  courseNames[5], courseNames[5] + " Flex", "Lunch", courseNames[7], courseNames[7] +
-                 " Flex", "Break", "Conferencing"]
-    wNames = ["Advisory/Community Flex Time", courseNames[3], courseNames[3] + " Flex", "Break",
+                 " Flex", breaks, "Conferencing"]
+    wNames = [mAdvisory, courseNames[3], courseNames[3] + " Flex", breaks,
                  courseNames[4], courseNames[4] + " Flex", "Lunch", courseNames[6], courseNames[6] +
-                 " Flex", "Break", "Conferencing"]
-    thNames = ["Advisory/Community Flex Time", courseNames[0], courseNames[0] + " Flex", "Break",
+                 " Flex", breaks, "Conferencing"]
+    thNames = [mAdvisory, courseNames[0], courseNames[0] + " Flex", breaks,
                  courseNames[2], courseNames[2] + " Flex", "Lunch", courseNames[5], courseNames[5] +
-                 " Flex", "Break", "Faculty Collaboration"]
-    fNames = ["Advisory/Community Flex Time", courseNames[1], courseNames[1] + " Flex", "Break",
+                 " Flex", breaks, "Faculty Collaboration"]
+    fNames = [mAdvisory, courseNames[1], courseNames[1] + " Flex", breaks,
                  courseNames[3], courseNames[3] + " Flex", "Lunch", courseNames[7], courseNames[7] +
-                 " Flex", "Break", "Conferencing"]
+                 " Flex", breaks, "Conferencing"]
     #The outer loop makes this run for each day of the week
     for z in range(1,6):
         #Chooses which set of names and durations to use based the day of the week
@@ -112,7 +145,7 @@ def create5DayWeek(courseNames, y, m, d):
                 c.events
         
     #Prints calendar file to console
-    print(str(c))
+    #print(str(c))
     #Saves calendar file to console
     #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
     open('my.ics', 'w').writelines(c)
@@ -125,12 +158,12 @@ def fallMidterm1Weeks(blocks):
     create4DayWeek(blocks, 2020, 9,29)
     create4DayWeek(blocks, 2020, 10,5)
 
-def guidedFallMidterm1Weeks(courses):
-    create4DayWeek(courses, 2020, 9, 8)
-    create5DayWeek(courses, 2020, 9, 14)
-    create5DayWeek(courses, 2020, 9, 21)
-    create4DayWeek(courses, 2020, 9,29)
-    create4DayWeek(courses, 2020, 10,5)
+def guidedFallMidterm1Weeks(courses, options):
+    create4DayWeek(courses, options, 2020, 9, 8)
+    create5DayWeek(courses, options, 2020, 9, 14)
+    create5DayWeek(courses, options, 2020, 9, 21)
+    create4DayWeek(courses, options, 2020, 9,29)
+    create4DayWeek(courses, options, 2020, 10,5)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -138,7 +171,7 @@ def home():
         <html>
             <head>
                 <style>
-                    .col{width:33.33%; float:left; margin-top: 50px; text-align: center;}
+                    .col{width:33.33%; float:left; margin-top: 10px; text-align: center;}
                     #title{border: 5px solid red;}
                     #instructions {text-align: left;}
                 </style>
@@ -168,14 +201,16 @@ def home():
                     <p>Block 7: <input name="block7"/></p>
                     <p>Block 8: <input name="block8"/></p>
                     <p><b>Check to include:</b></p>
-                    <p><input type="checkbox" id="option1" name="option1" value="MorningAdvisory">
-                    <label for="option1">Morning Advisory</label></p>
-                    <p><input type="checkbox" id="option2" name="option2" value="breaks">
-                    <label for="option2">Breaks</label></p>
-                    <p><input type="checkbox" id="option3" name="option3" value="Lunch">
-                    <label for="option3">Lunch</label></p>
-                    <p><input type="checkbox" id="option4" name="option4" value="Conferencing">
-                    <label for="option4">Conferencing/Faculty Collaboration</label></p>
+                    <p><input type="checkbox" id="mAdvisory" name="mAdvisory" value="mAdvisory">
+                    <label for="mAdvisory">Morning Advisory</label></p>
+                    <p><input type="checkbox" id="breaks" name="breaks" value="breaks">
+                    <label for="breaks">Breaks</label></p>
+                    <p><input type="checkbox" id="lunch" name="lunch" value="Lunch">
+                    <label for="lunch">Lunch</label></p>
+                    <p><input type="checkbox" id="conferencing" name="conferencing" value="conferencing">
+                    <label for="conferencing">Conferencing</label></p>
+                    <p><input type="checkbox" id="collaboration" name="collaboration" value="collaboration">
+                    <label for="collaboration">Faculty Collaboration</label></p>
                     <p><input type = "submit" value="Submit"/></p>
                 </form>
                 </div>
@@ -195,10 +230,19 @@ def getCal():
     block7 = request.args['block7']
     block8 = request.args['block8']
     courses = [block1, block2, block3, block4, block5, block6, block7, block8]
-    guidedFallMidterm1Weeks(courses)
+    #Creates a boolean list that says whether or not each box has been checked
+    mAdvisory = 'mAdvisory' in request.args
+    breaks = 'breaks' in request.args
+    lunch = 'lunch' in request.args
+    conferencing = 'conferencing' in request.args
+    collaboration = 'collaboration' in request.args
+    options=[mAdvisory,breaks,lunch,conferencing,collaboration]
+    
+    guidedFallMidterm1Weeks(courses, options)
     
     response = make_response(str(c))
     response.headers["Content-Disposition"] = "attachment;filename=my.ics"
+    #return '<br>'.join(str(options))
     return response
 
     
