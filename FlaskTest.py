@@ -51,10 +51,10 @@ class cal:
             conferencing = ""
         
         #List of names for each event depending on whether the day is even or odd schedule
-        evenNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
+        oddNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
                      self.courseNames[2], self.courseNames[2] + " Flex", lunch, self.courseNames[4], self.courseNames[4] +
                      " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", conferencing]
-        oddNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
+        evenNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
                      self.courseNames[3], self.courseNames[3] + " Flex", lunch, self.courseNames[5], self.courseNames[5] +
                      " Flex", breaks, self.courseNames[7], self.courseNames[7] + " Flex", conferencing]
         #The outer loop makes this run for each day of the week
