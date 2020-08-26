@@ -187,7 +187,7 @@ def home():
             <body>
                 <div class="col"><p></p></div>
                 <div class="col">
-                <h1 id="title">SAAS Calendar Creator</h1>
+                <h1 id="title">Calendar Creator for SAAS</h1>
                 <div id="instructions">
                     <h3>Instructions</h3>
                     <p>Enter the names of your classes here. If you do not have a class for a certain block just leave the box blank. Once you press submit:</p>
@@ -221,6 +221,7 @@ def home():
                     <label for="collaboration">Faculty Collaboration</label></p>
                     <p><input type = "submit" value="Submit"/></p>
                 </form>
+                <p>Want to learn more about how this was made? Check out the <a href="https://github.com/meghanRedShift/SAASCalendarCreator">GitHub</a>!</p>
                 </div>
                 <div class="col"><p></p></div>
             </body>
@@ -263,5 +264,3 @@ def getCal():
     
 if __name__ == "__main__":
     print("running!")
-    app.run(debug=True)
-    print("done...")

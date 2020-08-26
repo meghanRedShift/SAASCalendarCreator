@@ -16,9 +16,6 @@ mt = datetime.date(2020,10, 12)
 hy = [2020,2020]
 hm = [9, 10]
 hd = [28, 12]
-print(mt)
-holidays = [yk, mt]
-print(holidays)
 class cal:
     def __init__(self, courseNames, options, y, m, d):
         self.cal= Calendar()
@@ -70,7 +67,7 @@ class cal:
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days=z-1)
-                    for i in range(len(holidays)):
+                    for i in range(len(hy)):
                         checkHol = datetime.date(hy[i], hm[i], hd[i])
                         print("Happy Holidays!")
                         if beg.date() == checkHol:
