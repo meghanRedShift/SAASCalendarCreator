@@ -107,24 +107,28 @@ class cal:
             conferencing = 'Conferencing'
         else:
             conferencing = ""
+        if self.options[4]:
+            collaboration = 'Collaboration'
+        else:
+            collaboration = ""
         #List of modified durations for long days on 5 day schedule
         dur5 = [15,60,15,15,60,15,45,60,15,15,105]
         #List of names for each event depending on the day of the week
         mNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
                      self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[4], self.courseNames[4] +
-                     " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", "Conferencing"]
+                     " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", conferencing]
         tNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
                      self.courseNames[5], self.courseNames[5] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
-                     " Flex", breaks, "Conferencing"]
+                     " Flex", breaks, conferencing]
         wNames = [mAdvisory, self.courseNames[3], self.courseNames[3] + " Flex", breaks,
                      self.courseNames[4], self.courseNames[4] + " Flex", "Lunch", self.courseNames[6], self.courseNames[6] +
-                     " Flex", breaks, "Conferencing"]
+                     " Flex", breaks, conferencing]
         thNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
                      self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[5], self.courseNames[5] +
-                     " Flex", breaks, "Faculty Collaboration"]
+                     " Flex", breaks, collaboration]
         fNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
                      self.courseNames[3], self.courseNames[3] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
-                     " Flex", breaks, "Conferencing"]
+                     " Flex", breaks, conferencing]
         #The outer loop makes this run for each day of the week
         for z in range(1,6):
             #Chooses which set of names and durations to use based the day of the week
