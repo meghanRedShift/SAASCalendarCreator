@@ -12,10 +12,14 @@ hrs = [15,16,17,17,17,18,18,19,20,20,21,22,22]
 mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
 dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
 
+#List of year, month, and date of holidays on the school calendar
 hy = [2020,2020]
 hm = [9, 10]
 hd = [28, 12]
+
+#Create the class cal
 class cal:
+    #Initialize the class and its members
     def __init__(self, courseNames, options, y, m, d):
         self.cal= Calendar()
         self.courseNames = courseNames
@@ -26,6 +30,9 @@ class cal:
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
     def create4DayWeek(self):
+        #Checks if the checkbox for each option has been selected and
+        #sets the name for that option accordingly. The name "" will
+        #not create an event
         if self.options[0]:
             mAdvisory = 'Advisory/Community Flex Time'
         else:
@@ -66,8 +73,12 @@ class cal:
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days=z-1)
+                    #Loops through each holiday date
                     for i in range(len(hy)):
+                        #Creates a date object for each holiday date
                         checkHol = datetime.date(hy[i], hm[i], hd[i])
+                        #Compares the current date to the holiday and skips
+                        #to the next day if the current one is a holiday
                         if beg.date() == checkHol:
                             beg+=datetime.timedelta(days=1)
                             self.d = beg.day
@@ -83,7 +94,9 @@ class cal:
         print(str(self.cal))
         #Saves calendar file to console
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
+        #This did cause issues. I did all of the class stuff because of them
         open('my.ics', 'w').writelines(self.cal)
+        #Adds 3 days to get to the start of the next week
         beg+=datetime.timedelta(days=3)
         self.d = beg.day
         self.m = beg.month
@@ -91,6 +104,9 @@ class cal:
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
     def create5DayWeek(self):
+        #Checks if the checkbox for each option has been selected and
+        #sets the name for that option accordingly. The name "" will
+        #not create an event
         if self.options[0]:
             mAdvisory = 'Advisory/Community Flex Time'
         else:
@@ -166,15 +182,19 @@ class cal:
         print(str(self.cal))
         #Saves calendar file to console
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
+        #This did cause issues. I did all of the class stuff because of them
         open('my.ics', 'w').writelines(self.cal)
+        #Adds 3 days to get to the start of the next week
         beg+=datetime.timedelta(days=3)
         self.d = beg.day
         self.m = beg.month
         self.y = beg.year
 
-
+#This is where we get into flask stuff. I only have a basic working knowledge of this stuff
+#This says that when we just have the base address, run this function
 @app.route("/", methods=["GET", "POST"])
 def home():
+    #This is the HTML for the web page that you see
     return '''
         <html>
             <head>
@@ -230,6 +250,7 @@ def home():
 
 @app.route('/getCal')
 def getCal():
+    #Get each block name from the form
     block1 = request.args['block1']
     block2 = request.args['block2']
     block3 = request.args['block3']
@@ -247,6 +268,7 @@ def getCal():
     collaboration = 'collaboration' in request.args
     options=[mAdvisory,breaks,lunch,conferencing,collaboration]
 
+    #Create a calendar for each relevant week
     createCal = cal(courses, options, 2020, 9, 8)
     createCal.create4DayWeek()
     createCal.create5DayWeek()
@@ -255,12 +277,13 @@ def getCal():
     createCal.create4DayWeek()
     
     #guidedFallMidterm1Weeks(courses, options)
-    
+
+    #Downloads the file
     response = make_response(str(createCal.cal))
     response.headers["Content-Disposition"] = "attachment;filename=my.ics"
     #return '<br>'.join(str(options))
     return response
 
-    
+#Runs the flask
 if __name__ == "__main__":
     print("running!")
