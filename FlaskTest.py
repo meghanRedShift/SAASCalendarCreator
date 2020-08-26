@@ -7,43 +7,49 @@ app = Flask(__name__)
 from ics import Calendar, Event
 import datetime
 
+#The time (mins and hours) and duration of each period listed on the block schedule
+hrs = [15,16,17,17,17,18,18,19,20,20,21,22,22]
+mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
+dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
+
+hy = [2020,2020]
+hm = [9, 10]
+hd = [28, 12]
 class cal:
-    def __init__(self):
-        pass
-    
-    #Create calendar
-    c = Calendar()
-    #The time (mins and hours) and duration of each period listed on the block schedule
-    hrs = [15,16,17,17,17,18,18,19,20,20,21,22,22]
-    mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
-    dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
+    def __init__(self, courseNames, options, y, m, d):
+        self.cal= Calendar()
+        self.courseNames = courseNames
+        self.options = options
+        self.y = y
+        self.m = m
+        self.d = d
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
-    def create4DayWeek(courseNames, options, y, m, d,):
-        if options[0]:
+    def create4DayWeek(self):
+        if self.options[0]:
             mAdvisory = 'Advisory/Community Flex Time'
         else:
             mAdvisory = ""
-        if options[1]:
+        if self.options[1]:
             breaks='Break'
         else:
             breaks=""
-        if options[2]:
+        if self.options[2]:
             lunch="Lunch"
         else:
             lunch=""
-        if options[3]:
+        if self.options[3]:
             conferencing = 'Conferencing'
         else:
             conferencing = ""
         
         #List of names for each event depending on whether the day is even or odd schedule
-        evenNames = [mAdvisory, courseNames[0], courseNames[0] + " Flex", breaks,
-                     courseNames[2], courseNames[2] + " Flex", lunch, courseNames[4], courseNames[4] +
-                     " Flex", breaks, courseNames[6], courseNames[6] + " Flex", conferencing]
-        oddNames = [mAdvisory, courseNames[1], courseNames[1] + " Flex", breaks,
-                     courseNames[3], courseNames[3] + " Flex", lunch, courseNames[5], courseNames[5] +
-                     " Flex", breaks, courseNames[7], courseNames[7] + " Flex", conferencing]
+        evenNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
+                     self.courseNames[2], self.courseNames[2] + " Flex", lunch, self.courseNames[4], self.courseNames[4] +
+                     " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", conferencing]
+        oddNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
+                     self.courseNames[3], self.courseNames[3] + " Flex", lunch, self.courseNames[5], self.courseNames[5] +
+                     " Flex", breaks, self.courseNames[7], self.courseNames[7] + " Flex", conferencing]
         #The outer loop makes this run for each day of the week
         for z in range(1,5):
             #Chooses which set of names to use based on whether it is an even or odd day of the schedule
@@ -56,57 +62,68 @@ class cal:
                 #if statement make it so events are only created for named courses
                 if (names[x] != "" and names[x] != " Flex"):
                     #creates datetime for a class
-                    beg= datetime.datetime(y, m, d, hrs[x], mins[x])
+                    beg= datetime.datetime(self.y, self.m, self.d, hrs[x], mins[x])
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days=z-1)
+                    for i in range(len(hy)):
+                        checkHol = datetime.date(hy[i], hm[i], hd[i])
+                        if beg.date() == checkHol:
+                            beg+=datetime.timedelta(days=1)
+                            self.d = beg.day
+                            self.m = beg.month
+                            self.y = beg.year
                     #Creates calendar event
                     e=Event(name=names[x], begin=beg, duration={"minutes":dur[x]})
                     #Adds event to calendar
-                    c.events.add(e)
-                    c.events
+                    self.cal.events.add(e)
+                    self.cal.events
             
         #Prints calendar file to console
-        #print(str(c))
+        print(str(self.cal))
         #Saves calendar file to console
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
-        open('my.ics', 'w').writelines(c)
+        open('my.ics', 'w').writelines(self.cal)
+        beg+=datetime.timedelta(days=3)
+        self.d = beg.day
+        self.m = beg.month
+        self.y = beg.year
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
-    def create5DayWeek(courseNames, options, y, m, d):
-        if options[0]:
+    def create5DayWeek(self):
+        if self.options[0]:
             mAdvisory = 'Advisory/Community Flex Time'
         else:
             mAdvisory = ""
-        if options[1]:
+        if self.options[1]:
             breaks='Break'
         else:
             breaks=""
-        if options[2]:
+        if self.options[2]:
             lunch="Lunch"
         else:
             lunch=""
-        if options[3]:
+        if self.options[3]:
             conferencing = 'Conferencing'
         else:
             conferencing = ""
         #List of modified durations for long days on 5 day schedule
         dur5 = [15,60,15,15,60,15,45,60,15,15,105]
         #List of names for each event depending on the day of the week
-        mNames = [mAdvisory, courseNames[0], courseNames[0] + " Flex", breaks,
-                     courseNames[2], courseNames[2] + " Flex", "Lunch", courseNames[4], courseNames[4] +
-                     " Flex", breaks, courseNames[6], courseNames[6] + " Flex", "Conferencing"]
-        tNames = [mAdvisory, courseNames[1], courseNames[1] + " Flex", breaks,
-                     courseNames[5], courseNames[5] + " Flex", "Lunch", courseNames[7], courseNames[7] +
+        mNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
+                     self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[4], self.courseNames[4] +
+                     " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", "Conferencing"]
+        tNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
+                     self.courseNames[5], self.courseNames[5] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
                      " Flex", breaks, "Conferencing"]
-        wNames = [mAdvisory, courseNames[3], courseNames[3] + " Flex", breaks,
-                     courseNames[4], courseNames[4] + " Flex", "Lunch", courseNames[6], courseNames[6] +
+        wNames = [mAdvisory, self.courseNames[3], self.courseNames[3] + " Flex", breaks,
+                     self.courseNames[4], self.courseNames[4] + " Flex", "Lunch", self.courseNames[6], self.courseNames[6] +
                      " Flex", breaks, "Conferencing"]
-        thNames = [mAdvisory, courseNames[0], courseNames[0] + " Flex", breaks,
-                     courseNames[2], courseNames[2] + " Flex", "Lunch", courseNames[5], courseNames[5] +
+        thNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
+                     self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[5], self.courseNames[5] +
                      " Flex", breaks, "Faculty Collaboration"]
-        fNames = [mAdvisory, courseNames[1], courseNames[1] + " Flex", breaks,
-                     courseNames[3], courseNames[3] + " Flex", "Lunch", courseNames[7], courseNames[7] +
+        fNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
+                     self.courseNames[3], self.courseNames[3] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
                      " Flex", breaks, "Conferencing"]
         #The outer loop makes this run for each day of the week
         for z in range(1,6):
@@ -131,36 +148,26 @@ class cal:
                 #if statement make it so events are only created for named courses
                 if (names[x] != "" and names[x] != " Flex"):
                     #creates datetime for a class
-                    beg= datetime.datetime(y, m, d, hrs[x], mins[x])
+                    beg= datetime.datetime(self.y, self.m, self.d, hrs[x], mins[x])
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days = z-1)
                     #Creates calendar event
                     e=Event(name=names[x], begin=beg, duration={"minutes":duration[x]})
                     #Adds event to calendar
-                    c.events.add(e)
-                    c.events
+                    self.cal.events.add(e)
+                    self.cal.events
             
         #Prints calendar file to console
-        #print(str(c))
+        print(str(self.cal))
         #Saves calendar file to console
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
-        open('my.ics', 'w').writelines(c)
+        open('my.ics', 'w').writelines(self.cal)
+        beg+=datetime.timedelta(days=3)
+        self.d = beg.day
+        self.m = beg.month
+        self.y = beg.year
 
-    #Runs code for the dates of the first half of the fall trimester
-    def fallMidterm1Weeks(blocks):
-        create4DayWeek(blocks, 2020, 9, 8)
-        create5DayWeek(blocks, 2020, 9, 14)
-        create5DayWeek(blocks, 2020, 9, 21)
-        create4DayWeek(blocks, 2020, 9,29)
-        create4DayWeek(blocks, 2020, 10,5)
-
-    def guidedFallMidterm1Weeks(courses, options):
-        create4DayWeek(courses, options, 2020, 9, 8)
-        create5DayWeek(courses, options, 2020, 9, 14)
-        create5DayWeek(courses, options, 2020, 9, 21)
-        create4DayWeek(courses, options, 2020, 9,29)
-        create4DayWeek(courses, options, 2020, 10,5)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -183,7 +190,7 @@ def home():
                     <ul>
                         <li>A calendar file will download.</li>
                         <li>Create a <a href="https://support.google.com/calendar/answer/37095?hl=en">new calendar</a> in Google Drive</li>
-                        <li><a href="https://support.google.com/calendar/answer/37118?co=GENIE.Platform%3DDesktop&hl=en">Import</a> the calendar that you just created</li>
+                        <li><a href="https://support.google.com/calendar/answer/37118?co=GENIE.Platform%3DDesktop&hl=en">Import</a> the calendar that you just downloaded into the calendar that you just created!</li>
                     </ul>
                     <p><u>Currently, this generates a file for the first half trimester of the year only</u></p>
                 </div>
@@ -234,10 +241,17 @@ def getCal():
     conferencing = 'conferencing' in request.args
     collaboration = 'collaboration' in request.args
     options=[mAdvisory,breaks,lunch,conferencing,collaboration]
+
+    createCal = cal(courses, options, 2020, 9, 8)
+    createCal.create4DayWeek()
+    createCal.create5DayWeek()
+    createCal.create5DayWeek()
+    createCal.create4DayWeek()
+    createCal.create4DayWeek()
     
-    guidedFallMidterm1Weeks(courses, options)
+    #guidedFallMidterm1Weeks(courses, options)
     
-    response = make_response(str(c))
+    response = make_response(str(createCal.cal))
     response.headers["Content-Disposition"] = "attachment;filename=my.ics"
     #return '<br>'.join(str(options))
     return response

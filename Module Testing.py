@@ -11,13 +11,22 @@ import datetime
 hrs = [15,16,17,17,17,18,18,19,20,20,21,22,22]
 mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
 dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
-
-
+yk = datetime.date(2020,9, 28)
+mt = datetime.date(2020,10, 12)
+hy = [2020,2020]
+hm = [9, 10]
+hd = [28, 12]
+print(mt)
+holidays = [yk, mt]
+print(holidays)
 class cal:
-    def __init__(self, courseNames, options):
+    def __init__(self, courseNames, options, y, m, d):
         self.cal= Calendar()
         self.courseNames = courseNames
         self.options = options
+        self.y = y
+        self.m = m
+        self.d = d
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
     def create4DayWeek(self):
@@ -57,10 +66,19 @@ class cal:
                 #if statement make it so events are only created for named courses
                 if (names[x] != "" and names[x] != " Flex"):
                     #creates datetime for a class
-                    beg= datetime.datetime(y, m, d, hrs[x], mins[x])
+                    beg= datetime.datetime(self.y, self.m, self.d, hrs[x], mins[x])
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days=z-1)
+                    for i in range(len(holidays)):
+                        checkHol = datetime.date(hy[i], hm[i], hd[i])
+                        print("Happy Holidays!")
+                        if beg.date() == checkHol:
+                            print (beg.date())
+                            beg+=datetime.timedelta(days=1)
+                            self.d = beg.day
+                            self.m = beg.month
+                            self.y = beg.year
                     #Creates calendar event
                     e=Event(name=names[x], begin=beg, duration={"minutes":dur[x]})
                     #Adds event to calendar
@@ -72,6 +90,10 @@ class cal:
         #Saves calendar file to console
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
         open('my.ics', 'w').writelines(self.cal)
+        beg+=datetime.timedelta(days=3)
+        self.d = beg.day
+        self.m = beg.month
+        self.y = beg.year
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
     def create5DayWeek(self):
@@ -132,7 +154,7 @@ class cal:
                 #if statement make it so events are only created for named courses
                 if (names[x] != "" and names[x] != " Flex"):
                     #creates datetime for a class
-                    beg= datetime.datetime(y, m, d, hrs[x], mins[x])
+                    beg= datetime.datetime(self.y, self.m, self.d, hrs[x], mins[x])
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days = z-1)
@@ -147,26 +169,12 @@ class cal:
         #Saves calendar file to console
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
         open('my.ics', 'w').writelines(self.cal)
-
-    #Runs code for the dates of the first half of the fall trimester
-    def fallMidterm1Weeks(blocks):
-        create4DayWeek(blocks, 2020, 9, 8)
-        create5DayWeek(blocks, 2020, 9, 14)
-        create5DayWeek(blocks, 2020, 9, 21)
-        create4DayWeek(blocks, 2020, 9,29)
-        create4DayWeek(blocks, 2020, 10,5)
-
-    def guidedFallMidterm1Weeks(courses, options):
-        create4DayWeek(courses, options, 2020, 9, 8)
-        create5DayWeek(courses, options, 2020, 9, 14)
-        create5DayWeek(courses, options, 2020, 9, 21)
-        create4DayWeek(courses, options, 2020, 9,29)
-        create4DayWeek(courses, options, 2020, 10,5)
-
-y= 2020
-m=9
-d=8
-test = cal(["","","","","","","",""], ["mAdvisory", "breaks", "", ""])
-test.create5DayWeek()
-d=14
-test.create5DayWeek()
+        beg+=datetime.timedelta(days=3)
+        self.d = beg.day
+        self.m = beg.month
+        self.y = beg.yeary= 2020
+        
+courses = ["","","","","","","",""]
+options=["mAdvisory", "breaks", "", ""]
+createCal = cal(courses, options, 2020, 9, 28)
+createCal.create4DayWeek()
