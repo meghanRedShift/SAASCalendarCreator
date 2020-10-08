@@ -13,9 +13,9 @@ mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
 dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
 
 #List of year, month, and date of holidays on the school calendar
-hy = [2020,2020]
-hm = [9, 10]
-hd = [28, 12]
+hy = [2020,2020,2020]
+hm = [10,11,11]
+hd = [12,3,11]
 
 #Create the class cal
 class cal:
@@ -73,34 +73,44 @@ class cal:
                     #Adjusts date using z. This is in a separate statement so that the
                     #added day makes the month roll over if necessary
                     beg +=datetime.timedelta(days=z-1)
+                    
+                    print(beg)
                     #Loops through each holiday date
                     for i in range(len(hy)):
                         #Creates a date object for each holiday date
                         checkHol = datetime.date(hy[i], hm[i], hd[i])
+                        holiday = False
                         #Compares the current date to the holiday and skips
                         #to the next day if the current one is a holiday
                         if beg.date() == checkHol:
+                            holiday = True
+                            print("Holiday")
                             beg+=datetime.timedelta(days=1)
+                            print(beg)
+                            print("hol")
                             self.d = beg.day
                             self.m = beg.month
                             self.y = beg.year
+                            print(beg)
                     #Creates calendar event
                     e=Event(name=names[x], begin=beg, duration={"minutes":dur[x]})
                     #Adds event to calendar
                     self.cal.events.add(e)
                     self.cal.events
-            
-        #Prints calendar file to console
-        print(str(self.cal))
-        #Saves calendar file to console
-        #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
-        #This did cause issues. I did all of the class stuff because of them
-        open('my.ics', 'w').writelines(self.cal)
-        #Adds 3 days to get to the start of the next week
-        beg+=datetime.timedelta(days=3)
-        self.d = beg.day
-        self.m = beg.month
-        self.y = beg.year
+                    if holiday == True:
+                        beg-=datetime.timedelta(days=1)
+                        self.d = beg.day
+                        self.m = beg.month
+                        self.y = beg.year
+                        print(beg)
+                
+            #Prints calendar file to console
+            print(str(self.cal))
+            #Saves calendar file to console
+            #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
+            #This did cause issues. I did all of the class stuff because of them
+            open('my.ics', 'w').writelines(self.cal)
+
 
     #creates a 4 day week in calendar using the provided list of course names and week start date
     def create5DayWeek(self):
@@ -131,19 +141,19 @@ class cal:
         dur5 = [15,60,15,15,60,15,45,60,15,15,105]
         #List of names for each event depending on the day of the week
         mNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
-                     self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[4], self.courseNames[4] +
+                     self.courseNames[2], self.courseNames[2] + " Flex", lunch, self.courseNames[4], self.courseNames[4] +
                      " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", conferencing]
         tNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
-                     self.courseNames[5], self.courseNames[5] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
+                     self.courseNames[5], self.courseNames[5] + " Flex", lunch, self.courseNames[7], self.courseNames[7] +
                      " Flex", breaks, conferencing]
         wNames = [mAdvisory, self.courseNames[3], self.courseNames[3] + " Flex", breaks,
-                     self.courseNames[4], self.courseNames[4] + " Flex", "Lunch", self.courseNames[6], self.courseNames[6] +
+                     self.courseNames[4], self.courseNames[4] + " Flex", lunch, self.courseNames[6], self.courseNames[6] +
                      " Flex", breaks, conferencing]
         thNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
-                     self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[5], self.courseNames[5] +
+                     self.courseNames[2], self.courseNames[2] + " Flex", lunch, self.courseNames[5], self.courseNames[5] +
                      " Flex", breaks, collaboration]
         fNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
-                     self.courseNames[3], self.courseNames[3] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
+                     self.courseNames[3], self.courseNames[3] + " Flex", lunch, self.courseNames[7], self.courseNames[7] +
                      " Flex", breaks, conferencing]
         #The outer loop makes this run for each day of the week
         for z in range(1,6):
@@ -184,11 +194,7 @@ class cal:
         #I just keep writing to the same calendar. Haven't had issues with this but it could possibly cause issues.
         #This did cause issues. I did all of the class stuff because of them
         open('my.ics', 'w').writelines(self.cal)
-        #Adds 3 days to get to the start of the next week
-        beg+=datetime.timedelta(days=3)
-        self.d = beg.day
-        self.m = beg.month
-        self.y = beg.year
+
 
 #This is where we get into flask stuff. I only have a basic working knowledge of this stuff
 #This says that when we just have the base address, run this function
@@ -269,12 +275,13 @@ def getCal():
     options=[mAdvisory,breaks,lunch,conferencing,collaboration]
 
     #Create a calendar for each relevant week
-    createCal = cal(courses, options, 2020, 9, 8)
+    createCal = cal(courses, options, 2020, 10, 12)
     createCal.create4DayWeek()
     createCal.create5DayWeek()
     createCal.create5DayWeek()
     createCal.create4DayWeek()
     createCal.create4DayWeek()
+    createCal.create5DayWeek()
     
     #guidedFallMidterm1Weeks(courses, options)
 
