@@ -13,9 +13,9 @@ mins = [45,00,00,15,30,30,45,30,30,45,00,00,15]
 dur = [15,60,15,15,60,15,45,60,15,15,60,15,30]
 
 #List of year, month, and date of holidays on the school calendar
-hy = [2020,2020]
-hm = [9, 10]
-hd = [28, 12]
+hy = [2020,2020, 2020]
+hm = [10, 11,11]
+hd = [12, 3, 11]
 
 #Create the class cal
 class cal:
@@ -131,19 +131,19 @@ class cal:
         dur5 = [15,60,15,15,60,15,45,60,15,15,105]
         #List of names for each event depending on the day of the week
         mNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
-                     self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[4], self.courseNames[4] +
+                     self.courseNames[2], self.courseNames[2] + " Flex", lunch, self.courseNames[4], self.courseNames[4] +
                      " Flex", breaks, self.courseNames[6], self.courseNames[6] + " Flex", conferencing]
         tNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
-                     self.courseNames[5], self.courseNames[5] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
+                     self.courseNames[5], self.courseNames[5] + " Flex", lunch, self.courseNames[7], self.courseNames[7] +
                      " Flex", breaks, conferencing]
         wNames = [mAdvisory, self.courseNames[3], self.courseNames[3] + " Flex", breaks,
-                     self.courseNames[4], self.courseNames[4] + " Flex", "Lunch", self.courseNames[6], self.courseNames[6] +
+                     self.courseNames[4], self.courseNames[4] + " Flex", lunch, self.courseNames[6], self.courseNames[6] +
                      " Flex", breaks, conferencing]
         thNames = [mAdvisory, self.courseNames[0], self.courseNames[0] + " Flex", breaks,
-                     self.courseNames[2], self.courseNames[2] + " Flex", "Lunch", self.courseNames[5], self.courseNames[5] +
+                     self.courseNames[2], self.courseNames[2] + " Flex", lunch, self.courseNames[5], self.courseNames[5] +
                      " Flex", breaks, collaboration]
         fNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
-                     self.courseNames[3], self.courseNames[3] + " Flex", "Lunch", self.courseNames[7], self.courseNames[7] +
+                     self.courseNames[3], self.courseNames[3] + " Flex", lunch, self.courseNames[7], self.courseNames[7] +
                      " Flex", breaks, conferencing]
         #The outer loop makes this run for each day of the week
         for z in range(1,6):
@@ -269,12 +269,13 @@ def getCal():
     options=[mAdvisory,breaks,lunch,conferencing,collaboration]
 
     #Create a calendar for each relevant week
-    createCal = cal(courses, options, 2020, 9, 8)
+    createCal = cal(courses, options, 2020, 10, 12)
     createCal.create4DayWeek()
     createCal.create5DayWeek()
     createCal.create5DayWeek()
     createCal.create4DayWeek()
     createCal.create4DayWeek()
+    createCal.create5DayWeek()
     
     #guidedFallMidterm1Weeks(courses, options)
 
