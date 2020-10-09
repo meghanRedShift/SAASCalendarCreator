@@ -58,6 +58,8 @@ class cal:
                      self.courseNames[3], self.courseNames[3] + " Flex", lunch, self.courseNames[5], self.courseNames[5] +
                      " Flex", breaks, self.courseNames[7], self.courseNames[7] + " Flex", conferencing]
         #The outer loop makes this run for each day of the week
+        
+        adjustDay = 1
         for z in range(1,5):
             #Chooses which set of names to use based on whether it is an even or odd day of the schedule
             if (z%2==0):
@@ -70,21 +72,22 @@ class cal:
                 if (names[x] != "" and names[x] != " Flex"):
                     #creates datetime for a class
                     beg= datetime.datetime(self.y, self.m, self.d, hrs[x], mins[x])
-                    #Adjusts date using z. This is in a separate statement so that the
-                    #added day makes the month roll over if necessary
-                    beg +=datetime.timedelta(days=z-1)
                     #Loops through each holiday date
+                    
+                    #Adjusts date using z to go through each day of the week.
+                    #This is in a separate statement so that the
+                    #added day makes the month roll over if necessary
+                    beg +=datetime.timedelta(days=z-adjustDay)
                     for i in range(len(hy)):
                         #Creates a date object for each holiday date
                         checkHol = datetime.date(hy[i], hm[i], hd[i])
                         #Compares the current date to the holiday and skips
                         #to the next day if the current one is a holiday
                         if beg.date() == checkHol:
+                            adjustDay = 0
                             beg+=datetime.timedelta(days=1)
-                            self.d = beg.day
-                            self.m = beg.month
-                            self.y = beg.year
                     #Creates calendar event
+                    print(beg)
                     e=Event(name=names[x], begin=beg, duration={"minutes":dur[x]})
                     #Adds event to calendar
                     self.cal.events.add(e)
