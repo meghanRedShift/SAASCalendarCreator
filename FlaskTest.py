@@ -57,9 +57,10 @@ class cal:
         evenNames = [mAdvisory, self.courseNames[1], self.courseNames[1] + " Flex", breaks,
                      self.courseNames[3], self.courseNames[3] + " Flex", lunch, self.courseNames[5], self.courseNames[5] +
                      " Flex", breaks, self.courseNames[7], self.courseNames[7] + " Flex", conferencing]
-        #The outer loop makes this run for each day of the week
-        
+        #Set the automatic day adjustment to 1 to account for the fact that z starts at 1 but we
+        #initially want the change in date to be 0 and adjust day is subtracted from the z
         adjustDay = 1
+        #The outer loop makes this run for each day of the week
         for z in range(1,5):
             #Chooses which set of names to use based on whether it is an even or odd day of the schedule
             if (z%2==0):
@@ -84,7 +85,10 @@ class cal:
                         #Compares the current date to the holiday and skips
                         #to the next day if the current one is a holiday
                         if beg.date() == checkHol:
+                            #Sets adjustDay to 0 which essentially moves everything forward a day
+                            #skipping the holiday
                             adjustDay = 0
+                            #Adds one day to beg to put the current event on the correct day
                             beg+=datetime.timedelta(days=1)
                     #Creates calendar event
                     print(beg)
